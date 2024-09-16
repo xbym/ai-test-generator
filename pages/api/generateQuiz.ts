@@ -13,8 +13,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const quizData = parseGeneratedContent(generatedContent);
       
       res.status(200).json({ quizData });
-    } catch (error) {
-      res.status(500).json({ error: '生成测试失败' });
+    } catch (error: unknown) {
+      console.error('Detailed error:', error);
+      if (error instanceof Error) {
+        res.status(500).json({ error: '生成测试失败', details: error.message });
+      } else {
+        res.status(500).json({ error: '生成测试失败', details: String(error) });
+      }
     }
   } else {
     res.setHeader('Allow', ['POST']);

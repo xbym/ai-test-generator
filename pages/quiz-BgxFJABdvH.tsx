@@ -1,33 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import fs from 'fs';
-import path from 'path';
-import { nanoid } from 'nanoid';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    try {
-      const { quizData } = req.body;
-      const quizId = await generateQuizPage(quizData);
-      const quizUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/quiz-${quizId}`;
-      res.status(200).json({ quizUrl });
-    } catch (error) {
-      res.status(500).json({ error: '创建测试页面失败' });
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
-
-async function generateQuizPage(quizData: any) {
-  const quizId = nanoid(10);
-  const mainPageContent = `
 import React, { useState } from 'react';
 import WelcomeTemplate from '../templates/WelcomeTemplate';
 import QuestionTemplate from '../templates/QuestionTemplate';
 import ResultTemplate from '../templates/ResultTemplate';
 
-const quizData = ${JSON.stringify(quizData)};
+const quizData = {"title":"MBTI人格测试小测验","description":"本测试包含5个多选题，旨在帮助你更好地理解MBTI人格类型理论。请根据你的直觉选择最符合你性格的选项。","questions":[{"question":"在社交场合中，你通常更倾向于：","options":["与少数几个亲密的朋友深入交流","与一大群人轻松互动","观察他人并分析他们的行为","寻找机会展示自己的才华"],"correctAnswer":0},{"question":"当你面对一个新项目时，你首先会：","options":["制定详细的计划并按部就班地执行","凭直觉快速开始，边做边调整","与团队成员讨论并集思广益","分析项目的潜在风险和收益"],"correctAnswer":3},{"question":"在日常生活中，你更倾向于：","options":["按照既定的日程表行事","根据当下的感觉和灵感行事","与他人合作完成任务","独立完成任务并追求完美"],"correctAnswer":1},{"question":"当你遇到冲突时，你通常会：","options":["冷静分析问题并寻求解决方案","表达自己的感受并寻求理解","避免冲突并寻找妥协的方法","直接面对冲突并争取自己的立场"],"correctAnswer":0},{"question":"在选择职业时，你更看重：","options":["工作的稳定性和安全性","工作的创造性和自由度","与他人合作的机会","工作的挑战性和成就感"],"correctAnswer":3}]};
 
 const Quiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(-1);
@@ -75,12 +52,3 @@ const Quiz = () => {
 };
 
 export default Quiz;
-`;
-
-  const fileName = `quiz-${quizId}.tsx`;
-  const filePath = path.join(process.cwd(), 'pages', fileName);
-
-  fs.writeFileSync(filePath, mainPageContent);
-
-  return quizId;
-}
