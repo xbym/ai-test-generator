@@ -8,6 +8,7 @@ const Home: NextPage = () => {
   const [generatedLink, setGeneratedLink] = useState('')
   const [generatedQuestions, setGeneratedQuestions] = useState<string[]>([])
   const [generatedQuizUrl, setGeneratedQuizUrl] = useState('')
+  const [quizTopic, setQuizTopic] = useState('')
 
   const handleGenerate = async () => {
     setIsGenerating(true)
@@ -31,6 +32,7 @@ const Home: NextPage = () => {
   }
 
   async function handleGenerateQuiz() {
+    setIsGenerating(true);
     try {
       // 第一步：生成测试内容
       const response1 = await fetch('/api/generateQuiz', {
@@ -56,7 +58,9 @@ const Home: NextPage = () => {
       setGeneratedQuizUrl(data2.quizUrl);
     } catch (error) {
       console.error('Error generating quiz:', error);
-      // 处理错误...
+      alert('生成测试时出错，请稍后再试。');
+    } finally {
+      setIsGenerating(false);
     }
   }
 
@@ -71,16 +75,16 @@ const Home: NextPage = () => {
           <textarea
             className="w-full h-40 p-4 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none transition"
             placeholder="请描述您想要生成的测试类型,例如: MBTI人格测试"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={quizTopic}
+            onChange={(e) => setQuizTopic(e.target.value)}
           />
           
           <button
             className={`w-full py-3 px-6 text-white rounded-lg text-lg font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
               isGenerating ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
             }`}
-            onClick={handleGenerate}
-            disabled={isGenerating || !description.trim()}
+            onClick={handleGenerateQuiz}
+            disabled={isGenerating || !quizTopic.trim()}
           >
             {isGenerating ? (
               <span className="flex items-center justify-center">
@@ -95,25 +99,17 @@ const Home: NextPage = () => {
             )}
           </button>
           
-          {generatedLink && (
+          {generatedQuizUrl && (
             <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded animate-fade-in mt-4">
               <p className="font-bold">测试已生成!</p>
               <a
-                href={generatedLink}
+                href={generatedQuizUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline break-all"
               >
-                {generatedLink}
+                {generatedQuizUrl}
               </a>
-              <div className="mt-4">
-                <p className="font-bold">生成的问题:</p>
-                <ul className="list-decimal pl-5">
-                  {generatedQuestions.map((question, index) => (
-                    <li key={index}>{question}</li>
-                  ))}
-                </ul>
-              </div>
             </div>
           )}
         </div>
