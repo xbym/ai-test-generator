@@ -6,14 +6,27 @@ const Home: NextPage = () => {
   const [description, setDescription] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedLink, setGeneratedLink] = useState('')
+  const [generatedQuestions, setGeneratedQuestions] = useState<string[]>([])
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setIsGenerating(true)
-    // 模拟生成过程
-    setTimeout(() => {
-      setGeneratedLink('https://example.com/generated-test')
+    try {
+      const response = await fetch('/api/generate-test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ description }),
+      })
+      const data = await response.json()
+      setGeneratedLink(data.link)
+      setGeneratedQuestions(data.questions)
+    } catch (error) {
+      console.error('Error generating test:', error)
+      alert('生成测试时出错,请稍后再试。')
+    } finally {
       setIsGenerating(false)
-    }, 3000)
+    }
   }
 
   return (
@@ -52,7 +65,7 @@ const Home: NextPage = () => {
           </button>
           
           {generatedLink && (
-            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded animate-fade-in">
+            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded animate-fade-in mt-4">
               <p className="font-bold">测试已生成!</p>
               <a
                 href={generatedLink}
@@ -62,6 +75,14 @@ const Home: NextPage = () => {
               >
                 {generatedLink}
               </a>
+              <div className="mt-4">
+                <p className="font-bold">生成的问题:</p>
+                <ul className="list-decimal pl-5">
+                  {generatedQuestions.map((question, index) => (
+                    <li key={index}>{question}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           )}
         </div>
