@@ -3,11 +3,23 @@ import fs from 'fs';
 import path from 'path';
 import { nanoid } from 'nanoid';
 
+interface Question {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+}
+
+interface QuizData {
+  title: string;
+  description: string;
+  questions: Question[];
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
       const { quizData } = req.body;
-      const quizId = await generateQuizPage(quizData);
+      const quizId = await generateQuizPage(quizData as QuizData);
       const quizUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/quiz-${quizId}`;
       res.status(200).json({ quizUrl });
     } catch (error) {
@@ -19,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-async function generateQuizPage(quizData: any) {
+async function generateQuizPage(quizData: QuizData) {
   const quizId = nanoid(10);
   const mainPageContent = `
 import React, { useState } from 'react';

@@ -3,33 +3,9 @@ import type { NextPage } from 'next'
 import { ArrowRight, Loader2 } from 'lucide-react'
 
 const Home: NextPage = () => {
-  const [description, setDescription] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
-  const [generatedLink, setGeneratedLink] = useState('')
-  const [generatedQuestions, setGeneratedQuestions] = useState<string[]>([])
   const [generatedQuizUrl, setGeneratedQuizUrl] = useState('')
   const [quizTopic, setQuizTopic] = useState('')
-
-  const handleGenerate = async () => {
-    setIsGenerating(true)
-    try {
-      const response = await fetch('/api/generate-test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ description }),
-      })
-      const data = await response.json()
-      setGeneratedLink(data.link)
-      setGeneratedQuestions(data.questions)
-    } catch (error) {
-      console.error('Error generating test:', error)
-      alert('生成测试时出错,请稍后再试。')
-    } finally {
-      setIsGenerating(false)
-    }
-  }
 
   async function handleGenerateQuiz() {
     setIsGenerating(true);
