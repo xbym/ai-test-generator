@@ -7,6 +7,7 @@ const Home: NextPage = () => {
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedLink, setGeneratedLink] = useState('')
   const [generatedQuestions, setGeneratedQuestions] = useState<string[]>([])
+  const [generatedQuizUrl, setGeneratedQuizUrl] = useState('')
 
   const handleGenerate = async () => {
     setIsGenerating(true)
@@ -26,6 +27,36 @@ const Home: NextPage = () => {
       alert('生成测试时出错,请稍后再试。')
     } finally {
       setIsGenerating(false)
+    }
+  }
+
+  async function handleGenerateQuiz() {
+    try {
+      // 第一步：生成测试内容
+      const response1 = await fetch('/api/generateQuiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: quizTopic }),
+      });
+      const data1 = await response1.json();
+
+      if (!response1.ok) throw new Error(data1.error);
+
+      // 第二步：创建测试页面
+      const response2 = await fetch('/api/createQuizPage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quizData: data1.quizData }),
+      });
+      const data2 = await response2.json();
+
+      if (!response2.ok) throw new Error(data2.error);
+
+      // 设置生成的测试 URL
+      setGeneratedQuizUrl(data2.quizUrl);
+    } catch (error) {
+      console.error('Error generating quiz:', error);
+      // 处理错误...
     }
   }
 
