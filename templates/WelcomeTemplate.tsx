@@ -8,19 +8,16 @@ interface WelcomeTemplateProps {
 
 const WelcomeTemplate: React.FC<WelcomeTemplateProps> = ({ title, description, startQuizFunction }) => {
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <h1 className="text-4xl font-bold mb-4 text-center">{title}</h1>
-          <p className="mb-8 text-center">{description}</p>
-          <button
-            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={startQuizFunction}
-          >
-            开始测试
-          </button>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col justify-center items-center">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-2xl w-full text-center">
+        <h1 className="text-5xl font-bold text-blue-600 mb-6">{title}</h1>
+        <p className="text-lg text-gray-700 mb-8">{description}</p>
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 ease-in-out transform hover:scale-105"
+          onClick={startQuizFunction}
+        >
+          开始测试
+        </button>
       </div>
     </div>
   );

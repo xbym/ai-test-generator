@@ -10,23 +10,20 @@ interface QuestionTemplateProps {
 
 const QuestionTemplate: React.FC<QuestionTemplateProps> = ({ question, options, currentQuestion, totalQuestions, onAnswerFunction }) => {
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <h2 className="text-2xl font-semibold mb-4">问题 {currentQuestion} / {totalQuestions}</h2>
-          <p className="mb-4">{question}</p>
-          <div className="space-y-2">
-            {options.map((option, index) => (
-              <button
-                key={index}
-                className="w-full p-2 text-left bg-gray-200 hover:bg-gray-300 rounded"
-                onClick={() => onAnswerFunction(index)}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col justify-center items-center">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-2xl w-full text-center">
+        <h2 className="text-3xl font-bold text-blue-600 mb-6">问题 {currentQuestion} / {totalQuestions}</h2>
+        <p className="text-lg text-gray-700 mb-8">{question}</p>
+        <div className="space-y-4">
+          {options.map((option, index) => (
+            <button
+              key={index}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 ease-in-out transform hover:scale-105"
+              onClick={() => onAnswerFunction(index)}
+            >
+              {option}
+            </button>
+          ))}
         </div>
       </div>
     </div>
